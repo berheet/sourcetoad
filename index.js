@@ -56,8 +56,13 @@ var arr = [
 ];
 
 
-function mutateArray(a){
-  return a.filter(obj => obj["guest_type"] === "guest")
+function mutateArray(a) {
+  return a.sort((a, b) =>
+      ("" + b["last_name"] + " " + b["first_name"]).localeCompare(
+        a["first_name"] + " " + a["last_name"]
+      )
+    )
+    .filter(obj => obj["guest_type"] === "guest")
     .map(obj => {
       function flatten(obj, currentObj = {}) {
         Object.keys(obj).forEach(key => {
