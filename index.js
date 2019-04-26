@@ -57,24 +57,27 @@ var arr = [
 
 
 function mutateArray(a) {
-    return a.map(obj => {
-      function flatten(obj, currentObj = {}) {
-        Object.keys(obj).forEach(key => {
-          if (
-            Object.prototype.toString.call(obj[key]) ===
-            Object.prototype.toString()
-          ) {
-            return flatten(obj[key], currentObj);
-          } else
-            return (currentObj = Object.assign(currentObj, { [key]: obj[key] }));
-        });
-  
-        return currentObj;
-      }
-  
-      return flatten(obj);
-    });
-  }
+  return a.map(obj => {
+    function flatten(obj, currentObj = {}) {
+      Object.keys(obj).forEach(key => {
+        if (
+          Object.prototype.toString.call(obj[key]) ===
+          Object.prototype.toString()
+        ) {
+          return flatten(obj[key], currentObj);
+        } else
+          return (currentObj = Object.assign(currentObj, { [key]: obj[key] }));
+      });
+      if (currentObj.hasOwnProperty("some_array")) {
+        const some_total = currentObj["some_array"].reduce((v, a) => v + a, 0);
+        delete currentObj["some_array"];
+        return Object.assign(currentObj, { some_total });
+      } else return currentObj;
+    }
+    return flatten(obj);
+  });
+}
+
 $(document).ready(function() {
     $('#originalArray').html(JSON.stringify(arr, null, 2));
     $('#resultsArray').html(JSON.stringify(mutateArray(arr), null, 2));
