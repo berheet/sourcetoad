@@ -55,10 +55,26 @@ var arr = [
   },
 ];
 
-function mutateArray(a) {
-    return a;
-}
 
+function mutateArray(a) {
+    return a.map(obj => {
+      function flatten(obj, currentObj = {}) {
+        Object.keys(obj).forEach(key => {
+          if (
+            Object.prototype.toString.call(obj[key]) ===
+            Object.prototype.toString()
+          ) {
+            return flatten(obj[key], currentObj);
+          } else
+            return (currentObj = Object.assign(currentObj, { [key]: obj[key] }));
+        });
+  
+        return currentObj;
+      }
+  
+      return flatten(obj);
+    });
+  }
 $(document).ready(function() {
     $('#originalArray').html(JSON.stringify(arr, null, 2));
     $('#resultsArray').html(JSON.stringify(mutateArray(arr), null, 2));
